@@ -12,14 +12,14 @@ The IFS Multimodal Model is designed to be a versatile tool for Food Science vis
 - Support for various vision-language tasks
 
 ## 🛠️ Requirements
-
+`
 torch>=2.0.0
 transformers==4.45.2
 accelerate>=0.20.0
 peft>=0.3.0
 bitsandbytes>=0.39.0
 sentencepiece>=0.1.97
-
+`
 ## 🚀 Quick Start
 
 ### Installation
@@ -84,8 +84,7 @@ print(f"Model response: {response}")
 
 ## 📊 Performance（Ongoing）
 
-| Task | Metric | Score |
-|------|--------|-------|
+Ongoing ...
 
 
 ## 🔧 Advanced Configuration
