@@ -127,7 +127,7 @@ class LlavaLora:
 
         conversations = []
         for prompt, response in zip(prompts, responses):
-            conversation = f"<|im_start|>user\n{prompt}<|im_end|><image><|im_start|>assistant\n{response}<|im_end|>"
+            conversation = f"<|im_start|>user\n{prompt}<|im_end|>\n<image>\n<|im_start|>assistant\n{response}<|im_end|>"
             conversations.append(conversation)
 
         images = [Image.open(img_path).convert("RGB") for img_path in images]
@@ -136,9 +136,10 @@ class LlavaLora:
             images=images,
             text=conversations,
             return_tensors="pt",
-            padding="max_length",
+            padding=True,
             truncation=True,
-            max_length=512
+            max_length=512,
+            add_special_tokens=True
         )
 
         inputs["labels"] = inputs["input_ids"].clone()

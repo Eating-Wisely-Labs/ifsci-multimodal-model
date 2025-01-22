@@ -30,39 +30,56 @@ cd ifs_multimodal_model
 pip install -r requirements.txt
 ```
 
-### Model Training
+### Customize Your Own VQA Dataset for Model Training
 
 ```python
-from ifs_model import IFSMultimodalTrainer
-
-trainer = IFSMultimodalTrainer(
-    vision_model="clip-vit-large-patch14",
-    language_model="vicuna-13b",
-    lora_config={
-        "r": 8,
-        "alpha": 16,
-        "dropout": 0.05
-    }
+# Initialize the LlavaLoraFt instance
+llava_ft = LlavaLora(
+    model_name="llava-hf/llava-v1.6-mistral-7b-hf",
+    output_dir="./llava-finetuned"
 )
 
-trainer.train(
-    train_data="path/to/training/data",
-    eval_data="path/to/eval/data",
-    epochs=3,
-    batch_size=32
+# Prepare your training data
+train_images = ["llava_v1_5_radar.jpg"]
+train_prompts = ["What is shown in this image?"]
+train_responses = ["This is a radar image showing..."]
+
+# Initialzie IFS data holder, where the data is annotated by IFS users.
+# ifs_data_holder = IFSAnnotationData(db_path="./ifs_annotation.db", image_base_path="./ifs_images")
+# train_images, train_prompts, train_responses = ifs_data_holder.prepare_dataset()
+
+# Create dataset
+train_dataset = llava_ft.prepare_dataset(train_images, train_prompts, train_responses)
+
+# Start training
+llava_ft.train(
+    train_dataset=train_dataset,
+    num_epochs=3,
+    batch_size=1,
+    learning_rate=2e-4
+)
+
+# Save the model
+save_directory = "./llava-finetuned-final"
+llava_ft.save_model(save_directory)
+
+# Perform inference with the trained model
+test_image_path = "ifs_banner.jpeg"
+test_prompt = "What is shown in this image?"
 )
 ```
 
 ### Inference
 
 ```python
-from ifs_model import IFSMultimodalModel
+from ifs_llava_lora import LlavaLora
 
-model = IFSMultimodalModel.from_pretrained("path/to/checkpoint")
-response = model.generate(
-    image="path/to/image.jpg",
-    prompt="Describe this image in detail."
-)
+# Load the saved model for inference
+inference_model = LlavaLora.load_model(save_directory)
+
+# Generate response
+response = inference_model.generate_response(test_image_path, test_prompt)
+print(f"Model response: {response}")
 ```
 
 ## 📊 Performance（Ongoing）
