@@ -1,5 +1,5 @@
-from ifs_llava_lora import LlavaLora
-from ifs_annotation_data import IFSAnnotationData
+from ifs_model.ifs_llava_lora import LlavaLora
+from ifs_model.ifs_annotation_data import IFSAnnotationData
 
 
 # Initialize the LlavaLoraFt instance
