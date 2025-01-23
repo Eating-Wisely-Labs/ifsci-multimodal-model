@@ -137,11 +137,12 @@ class LlavaLora:
         # ]
         # inputs = processor(prompts, [chart_img, cat_img], return_tensors='pt', padding=True).to("cuda")
         #     chart_img has 2634 tokens, while cat_img has 2340 tokens
+
         for prompt, response in zip(prompts, responses):
             conversation = f"[INST] user: <image> \n{prompt}[/INST] \n [INST] assistant: {response} [/INST]"
             conversations.append(conversation)
 
-        images = [Image.open(img_path).raw for img_path in images]
+        images = [Image.open(img_path).convert("RGB").getdata() for img_path in images]
 
         inputs = self.processor(
             images=images,
