@@ -128,11 +128,20 @@ class LlavaLora:
         responses = examples["response"]
 
         conversations = []
+
+        # cat_img = Image.open(requests.get("http://images.cocodataset.org/val2017/000000039769.jpg", stream=True).raw)
+        # chart_img = Image.open(requests.get("https://github.com/haotian-liu/LLaVA/blob/1a91fc274d7c35a9b50b3cb29c4247ae5837ce39/images/llava_v1_5_radar.jpg?raw=true", stream=True).raw)
+        # prompts = [
+        #     "[INST] <image>\nWhat is shown in this image? [/INST]",
+        #     "[INST] <image>\nWhat is shown in this image? [/INST]",
+        # ]
+        # inputs = processor(prompts, [chart_img, cat_img], return_tensors='pt', padding=True).to("cuda")
+        #     chart_img has 2634 tokens, while cat_img has 2340 tokens
         for prompt, response in zip(prompts, responses):
-            conversation = f"<|im_start|>user\n{prompt}<|im_end|>\n<image>\n<|im_start|>assistant\n{response}<|im_end|>"
+            conversation = f"[INST] user: <image> \n{prompt}[/INST] \n [INST] assistant: {response} [/INST]"
             conversations.append(conversation)
 
-        images = [Image.open(img_path).convert("RGB") for img_path in images]
+        images = [Image.open(img_path).raw for img_path in images]
 
         inputs = self.processor(
             images=images,
