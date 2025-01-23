@@ -9,7 +9,7 @@ llava_ft = LlavaLora(
 )
 
 # Prepare your training data
-train_images = ["src/example_food.jpg"]
+train_images = ["src/example_food.jpeg"]
 train_prompts = ["What is shown in this image?"]
 train_responses = ["This is a pizza, with a source on top. It's caloric value is 100 calories."]
 
