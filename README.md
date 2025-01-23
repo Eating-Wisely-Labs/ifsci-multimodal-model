@@ -20,6 +20,12 @@ peft>=0.3.0
 bitsandbytes>=0.39.0
 sentencepiece>=0.1.97
 `
+
+
+LLaVA-NeXT-Image-Llama3-Lora Recommended GPU configuration:
+- 13B training in 8-A100-40G/8-A6000,
+- 7B training in 8-RTX3090.
+
 ## 🚀 Quick Start
 
 ### Installation
