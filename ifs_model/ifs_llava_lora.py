@@ -116,46 +116,54 @@ class LlavaLora:
     def _preprocess_function(self, examples: dict) -> dict:
         """
         Preprocess the dataset examples for training.
-
-        Args:
-            examples (dict): Dictionary containing prompts, images, and responses
-
-        Returns:
-            dict: Processed inputs including tokenized text and processed images
         """
         prompts = examples["prompt"]
-        images = examples["image"]
+        image_paths = examples["image"]
         responses = examples["response"]
 
+        images = []
+        for img_path in image_paths:
+            try:
+                image = Image.open(img_path)
+                if image.mode != "RGB":
+                    image = image.convert("RGB")
+                images.append(image)
+            except Exception as e:
+                print(f"Error loading image {img_path}: {e}")
+                raise
+
         conversations = []
-
-        # cat_img = Image.open(requests.get("http://images.cocodataset.org/val2017/000000039769.jpg", stream=True).raw)
-        # chart_img = Image.open(requests.get("https://github.com/haotian-liu/LLaVA/blob/1a91fc274d7c35a9b50b3cb29c4247ae5837ce39/images/llava_v1_5_radar.jpg?raw=true", stream=True).raw)
-        # prompts = [
-        #     "[INST] <image>\nWhat is shown in this image? [/INST]",
-        #     "[INST] <image>\nWhat is shown in this image? [/INST]",
-        # ]
-        # inputs = processor(prompts, [chart_img, cat_img], return_tensors='pt', padding=True).to("cuda")
-        #     chart_img has 2634 tokens, while cat_img has 2340 tokens
-
         for prompt, response in zip(prompts, responses):
-            conversation = f"[INST] user: <image> \n{prompt}[/INST] \n [INST] assistant: {response} [/INST]"
+            conversation = (
+                f"<|im_start|>user\n{prompt}<|im_end|>\n"
+                f"<image>\n"
+                f"<|im_start|>assistant\n{response}<|im_end|>"
+            )
             conversations.append(conversation)
 
-        images = [Image.open(img_path).convert("RGB").getdata() for img_path in images]
 
-        inputs = self.processor(
-            images=images,
-            text=conversations,
-            return_tensors="pt",
-            padding=True,
-            truncation=True,
-            max_length=512,
-            add_special_tokens=True
-        )
+        try:
+            inputs = self.processor(
+                images=images,
+                text=conversations,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=512,
+                add_special_tokens=True
+            )
+        except Exception as e:
+            print("Processor error:")
+            print(f"Images type: {type(images)}, length: {len(images)}")
+            print(f"First image type: {type(images[0])}")
+            print(f"Text type: {type(conversations)}, length: {len(conversations)}")
+            print(f"First text: {conversations[0][:100]}...")
+            raise
 
+        # 4. 设置标签
         inputs["labels"] = inputs["input_ids"].clone()
 
+        # 5. 清理不需要的字段
         if "token_type_ids" in inputs:
             del inputs["token_type_ids"]
 
