@@ -9,9 +9,9 @@ llava_ft = LlavaLora(
 )
 
 # Prepare your training data
-train_images = ["llava_v1_5_radar.jpg"]
+train_images = ["src/example_food.jpg"]
 train_prompts = ["What is shown in this image?"]
-train_responses = ["This is a radar image showing..."]
+train_responses = ["This is a pizza, with a source on top. It's caloric value is 100 calories."]
 
 # Initialzie IFS data holder, where the data is annotated by IFS users.
 # ifs_data_holder = IFSAnnotationData(db_path="./ifs_annotation.db", image_base_path="./ifs_images")

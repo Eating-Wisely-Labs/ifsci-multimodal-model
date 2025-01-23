@@ -58,7 +58,8 @@ class LlavaLora:
             },
             truncation=True,
             padding="max_length",
-            max_length=512
+            max_length=512,
+            revision="2f7f20bda2e7af8e54438fec01ac5214e9ac6f92"
         )
         self.processor.tokenizer.padding_side = "right"
         self.processor.patch_size = 16  # Ensure patch_size is set
@@ -73,6 +74,7 @@ class LlavaLora:
             self.model_name,
             torch_dtype=torch.float16,
             low_cpu_mem_usage=True,
+            revision="2f7f20bda2e7af8e54438fec01ac5214e9ac6f92"
         )
 
         # Set model padding side for training
