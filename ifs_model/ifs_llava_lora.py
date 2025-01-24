@@ -53,8 +53,8 @@ class LlavaLora:
         self.processor = LlavaNextProcessor.from_pretrained(
             self.model_name,
             image_processor_kwargs={
-                "patch_size": 16,
-                "vision_feature_select_strategy": "default"
+                "size": {"height": 336, "width": 336},  # Set specific image size
+                "patch_size": 14,  # Changed from 16 to 14
             },
             truncation=True,
             padding="max_length",
@@ -62,8 +62,6 @@ class LlavaLora:
             revision="2f7f20bda2e7af8e54438fec01ac5214e9ac6f92"
         )
         self.processor.tokenizer.padding_side = "right"
-        self.processor.patch_size = 16  # Ensure patch_size is set
-        self.processor.vision_feature_select_strategy = "default"  # Ensure strategy is set
 
     def _initialize_model(self):
         """
@@ -74,7 +72,11 @@ class LlavaLora:
             self.model_name,
             torch_dtype=torch.float16,
             low_cpu_mem_usage=True,
-            revision="2f7f20bda2e7af8e54438fec01ac5214e9ac6f92"
+            revision="2f7f20bda2e7af8e54438fec01ac5214e9ac6f92",
+            vision_config_kwargs={
+                "patch_size": 14,  # Match patch_size with processor
+                "image_size": 336,  # Match image_size with processor
+            }
         )
 
         # Set model padding side for training
