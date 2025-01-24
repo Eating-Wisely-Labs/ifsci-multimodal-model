@@ -52,16 +52,17 @@ class LlavaLora:
         """
         self.processor = LlavaNextProcessor.from_pretrained(
             self.model_name,
-            image_processor_kwargs={
-                "size": {"height": 336, "width": 336},  # Set specific image size
-                "patch_size": 14,  # Changed from 16 to 14
-            },
-            truncation=True,
-            padding="max_length",
-            max_length=512,
             revision="2f7f20bda2e7af8e54438fec01ac5214e9ac6f92"
         )
+
+        # Set image processor configurations
+        self.processor.image_processor.size = {"height": 336, "width": 336}
+        self.processor.image_processor.patch_size = 14
+
+        # Set tokenizer configurations
         self.processor.tokenizer.padding_side = "right"
+        self.processor.tokenizer.truncation_side = "right"
+        self.processor.tokenizer.model_max_length = 512
 
     def _initialize_model(self):
         """
