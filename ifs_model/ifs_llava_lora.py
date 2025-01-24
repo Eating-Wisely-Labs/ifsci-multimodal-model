@@ -72,12 +72,12 @@ class LlavaLora:
             self.model_name,
             torch_dtype=torch.float16,
             low_cpu_mem_usage=True,
-            revision="2f7f20bda2e7af8e54438fec01ac5214e9ac6f92",
-            vision_config_kwargs={
-                "patch_size": 14,  # Match patch_size with processor
-                "image_size": 336,  # Match image_size with processor
-            }
+            revision="2f7f20bda2e7af8e54438fec01ac5214e9ac6f92"
         )
+
+        # Update vision config directly
+        self.model.config.vision_config.patch_size = 14
+        self.model.config.vision_config.image_size = 336
 
         # Set model padding side for training
         self.model.padding_side = "right"
