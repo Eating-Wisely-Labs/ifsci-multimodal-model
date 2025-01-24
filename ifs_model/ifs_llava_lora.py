@@ -57,6 +57,7 @@ class LlavaLora:
 
         # Set image processor configurations
         self.processor.image_processor.size = {"height": 336, "width": 336}
+        self.processor.patch_size = 14  # Set directly on processor
         self.processor.image_processor.patch_size = 14
 
         # Set tokenizer configurations
