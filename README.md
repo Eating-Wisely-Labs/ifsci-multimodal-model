@@ -114,4 +114,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions and feedback:
 - Create an issue in this repository
-- X: @0xSakataGintoki @IFS_AI
+- X: @ifsci_ai
